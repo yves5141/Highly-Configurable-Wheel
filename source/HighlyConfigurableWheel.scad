@@ -62,7 +62,7 @@
 //   other flat tire material (such as rubber bands), jsut specify the its thickness. If you're not
 //   using any tire at all, set the tireCSDiameter to zero. 
 
-wheelWidth     = 20;    // The width (or thickness) of the wheel at the rim.
+wheelWidth     = 5;    // The width (or thickness) of the wheel at the rim.
 tireCSDiameter = 4;     // Cross-sectional diameter (CS) -- How thick is the tire rubber?
 tireID         = 93;    // Internal diameter (ID) -- How wide is the inside opening? 
 tireStretch    = 1.01;  // Circumferential stretch percentage (usually 1 + 0-5%, e.g. 1.02) -- How 
@@ -181,7 +181,7 @@ spaceBetweenTires = 2;            // For o-rings/v-grooves, the space between ea
 //    than the rim. The hub position will be based on the inner surface resulting from this inset. 
 
 spokeStyle        = "rectangle";   // [ none, biohazard, circle, circlefit, diamond, line, rectangle, spiral, fill ]
-spokeInset        = [4,8];      // The [inner,outer] inset of the spoke area from the surface
+spokeInset        = [0,0];      // The [inner,outer] inset of the spoke area from the surface
 numberOfSpokes    = 6;          // Number of "spokes." Set this to three if you're doing the biohazard design
 spokeWidth        = 2;          // This is how wide each spoke is.
 proportion        = [2.4,1.4];  // proportion to rim, proportion of width, for rectangle, diamond, circle
@@ -204,11 +204,11 @@ concavity         = [0,0];      // Concavity distance of spoke area for [inside,
 //      Use innerCircleDiameter to specify a solid inner circle to use as a base for the hub. This can 
 //   be useful if you need a a solid surface for servo mounting hardware or for the base hub fillet/chamfer.
 
-includeHub           = true;  // Set to false to remove the hub and only include the shaft diameter hole. 
+includeHub           = false;  // Set to false to remove the hub and only include the shaft diameter hole. 
 hubDiameter          = 25;    // The diameter of the hub portion of the wheel
 hubHeight            = 12;    // The total height of the hub
 hubZOffset           = 0;     // The Z position of the hub, negative numbers from the surface of the wheel 
-innerCircleDiameter  = 30;    // The diameter of the solid inner circle under the hub, or zero for none. 
+innerCircleDiameter  = 15;    // The diameter of the solid inner circle under the hub, or zero for none. 
 
 baseFilletRadius     = 2;     // The radius of the fillet (rounded part) between the hub and wheel. 
 topFilletRadius      = 2;     // The radius of the fillet (rounded part) at the top of the hub. 
@@ -240,9 +240,12 @@ chamferOnly          = false; // Set to true to use chamfers (straight 45-degree
 //      Use servoNutTrap to create nut traps for bolts used to mount the wheel onto servo arms. This 
 //   feature was suggested by AUGuru. 
 
+counterBoreBottomThickness  = 2;   // The thickness of the counter bore's bottom
+throughHoleDiameter         = 2.2; // The through hole diameter for the counter bore
+
 hexbore              = false;      // Make the bore a hex shaft vs a circle 
-shaftDiameter        = 8;          // The diameter of the motor shaft
-shaftFlatDiameter    = 6;          // The diameter of the motor shaft at the flat, or shaftDiameter for no flat.
+shaftDiameter        = 5.2;          // The diameter of the motor shaft
+shaftFlatDiameter    = 5.2;          // The diameter of the motor shaft at the flat, or shaftDiameter for no flat.
 
 setScrewCount        = 1;          // The number of set screws/nuts to render, spaced evenly around the shaft 
 setScrewDiameter     = 3;          // The diameter of the set screw. 3 is the default for an M3 screw. 
@@ -515,6 +518,15 @@ module wheel() {
 				staggerOffset, lineThickness ); 
 		}
 	}
+    // make a counter bore for rods with axial threads
+    translate([0,0,-wheelWidth/2])
+    {
+        difference()
+        {
+            cylinder(h = counterBoreBottomThickness, d = innerCircleDiameter, center = true);
+            cylinder(h = wheelWidth*2, d = throughHoleDiameter, center = true);
+        }
+    }
 }
 
 // builds in extra space for better rendering
