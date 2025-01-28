@@ -519,7 +519,7 @@ module wheel() {
 		}
 	}
     // make a counter bore for rods with axial threads
-    translate([0,0,-wheelWidth/2])
+    translate([0,0,-wheelWidth/2 + counterBoreBottomThickness/2])
     {
         difference()
         {
